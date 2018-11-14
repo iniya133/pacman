@@ -10,9 +10,10 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         BorderPane border = new BorderPane();
-
-
         Scene root = new Scene(border, 600, 600);
+
+        Game game = new Game();
+        game.load();
 
         primaryStage.setTitle("Pacman");
         primaryStage.setScene(root);
