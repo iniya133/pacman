@@ -1,5 +1,7 @@
 package pacman;
 
+import pacman.Entities.PacMan;
+import pacman.Entities.Pickable;
 import pacman.slots.Corridor;
 import pacman.slots.GhostDoor;
 import pacman.slots.Wall;
@@ -7,11 +9,12 @@ import pacman.slots.Void;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Observable;
 
 public class Game extends Observable {
     private Slot[][] matrix;
-    private Entity[] entities;
+    private ArrayList<Entity> entities;
     private int eateanPickables = 0;
     private int pickables;
     private int width;
@@ -38,6 +41,23 @@ public class Game extends Observable {
         return slot;
     }
 
+    private Entity characterToEntity(char character) throws Exception {
+        Entity entity = null;
+
+        switch (character) {
+            case '4':
+                entity = new Pickable();
+                break;
+            case '9':
+                entity = new Ghost();
+                break;
+            case '8':
+                entity = new PacMan();
+                break;
+        }
+        return entity;
+    }
+
     void load() {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("assets/level-1.txt"))) {
             String line = bufferedReader.readLine();
@@ -48,6 +68,7 @@ public class Game extends Observable {
             line = bufferedReader.readLine();
 
             matrix = new Slot[width][height];
+            entities = new ArrayList<Entity>();
 
             int y = 0;
             while (line != null && y < height) {
@@ -59,6 +80,23 @@ public class Game extends Observable {
                     Slot slot = characterToSlot(character);
                     if (slot != null) {
                         matrix[x][y] = slot;
+                        x += 1;
+                    }
+                }
+
+                line = bufferedReader.readLine();
+                y += 1;
+            }
+            y = 0;
+            while (line != null && y < height) {
+                char[] characters = line.toCharArray();
+                int x = 0;
+
+                for (char character : characters) {
+                    Entity entity = characterToEntity(character);
+                    if (entity != null) {
+                        entity.setPosition(x, y);
+                        entities.add(entity);
                         x += 1;
                     }
                 }
