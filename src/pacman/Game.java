@@ -1,7 +1,9 @@
 package pacman;
 
-import pacman.Entities.PacMan;
-import pacman.Entities.Pickable;
+import pacman.entities.PacMan;
+import pacman.entities.Pickable;
+import pacman.entities.Ghost;
+
 import pacman.slots.Corridor;
 import pacman.slots.GhostDoor;
 import pacman.slots.Wall;
@@ -68,7 +70,7 @@ public class Game extends Observable {
             line = bufferedReader.readLine();
 
             matrix = new Slot[width][height];
-            entities = new ArrayList<Entity>();
+            entities = new ArrayList<>();
 
             int y = 0;
             while (line != null && y < height) {
@@ -87,6 +89,9 @@ public class Game extends Observable {
                 line = bufferedReader.readLine();
                 y += 1;
             }
+
+            line = bufferedReader.readLine();
+
             y = 0;
             while (line != null && y < height) {
                 char[] characters = line.toCharArray();
@@ -97,8 +102,8 @@ public class Game extends Observable {
                     if (entity != null) {
                         entity.setPosition(x, y);
                         entities.add(entity);
-                        x += 1;
                     }
+                    x += 1;
                 }
 
                 line = bufferedReader.readLine();
@@ -125,6 +130,9 @@ public class Game extends Observable {
         return width;
     }
 
+    ArrayList<Entity> getEntities() {
+        return entities;
+    }
 
     public boolean isEnded() {
         return false;

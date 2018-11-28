@@ -6,7 +6,11 @@ public abstract class Entity implements Runnable {
     public void run() {
 
     }
-    public void setPosition(int x, int y){
+
+    Position getPosition() {
+        return position;
+    }
+    void setPosition(int x, int y){
         this.position = new Position(x, y);
     }
 }
