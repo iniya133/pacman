@@ -57,6 +57,7 @@ public class UI extends Application implements Observer {
         root.getChildren().add(canvas);
 
         primaryStage.setTitle("Pacman");
+        primaryStage.setResizable(false);
         Scene scene = new Scene(root, Color.BLACK);
         primaryStage.setScene(scene);
         primaryStage.show();
