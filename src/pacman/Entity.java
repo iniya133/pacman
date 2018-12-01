@@ -3,7 +3,7 @@ package pacman;
 public abstract class Entity {
     private Position position;
 
-    Position getPosition() {
+    public Position getPosition() {
         return position;
     }
 

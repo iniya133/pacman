@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class Game extends Observable {
     private Slot[][] matrix;
     private ArrayList<Entity> entities;
-    private int eateanPickables = 0;
+    private int score = 0;
     private int pickables;
     private int width;
     private int height;
@@ -256,7 +256,20 @@ public class Game extends Observable {
      *
      * @param direction {Direction}
      */
-    boolean playerMove(Direction direction) {
-        return move(pacman, direction);
+    void playerMove(Direction direction) {
+        if (move(pacman, direction)) {
+            lock.lock();
+            for (Entity entity : entities) {
+                if (entity instanceof Pickable) {
+                    pacman.entities.Pickable pick = (Pickable) entity;
+                    if (pick.getPosition().equals(pacman.getPosition())) {
+                        score += 10;
+                        entities.remove(entity);
+                        break;
+                    }
+                }
+            }
+            lock.unlock();
+        }
     }
 }
