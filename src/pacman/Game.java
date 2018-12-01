@@ -22,6 +22,65 @@ public class Game extends Observable {
     private int width;
     private int height;
 
+    private Entity pacman;
+
+    public void playerMove(Direction direction){
+
+        for(Entity entity : entities){
+            if (entity instanceof PacMan) {
+                pacman = entity;
+            }
+        }
+
+        switch(direction){
+            case UP:
+                if(matrix[pacman.getPosition().x][pacman.getPosition().y-1] instanceof Corridor)
+                {
+                    pacman.setPosition(pacman.getPosition().x,pacman.getPosition().y-1);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+            case DOWN:
+                if(matrix[pacman.getPosition().x][pacman.getPosition().y+1] instanceof Corridor)
+                {
+                    pacman.setPosition(pacman.getPosition().x,pacman.getPosition().y+1);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+            case LEFT:
+                if(pacman.getPosition().x == 0)
+                {
+                    pacman.setPosition(width-1,pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                }
+                else if(matrix[pacman.getPosition().x-1][pacman.getPosition().y] instanceof Corridor)
+                {
+                    pacman.setPosition(pacman.getPosition().x-1,pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+            case RIGHT:
+                if(pacman.getPosition().x == width -1)
+                {
+                    pacman.setPosition(0,pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                }
+                else if(matrix[pacman.getPosition().x+1][pacman.getPosition().y] instanceof Corridor)
+                {
+                    pacman.setPosition(pacman.getPosition().x+1,pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+        }
+
+    }
+
     private Slot characterToSlot(char character) throws Exception {
         Slot slot = null;
 
@@ -71,6 +130,7 @@ public class Game extends Observable {
 
             matrix = new Slot[width][height];
             entities = new ArrayList<>();
+
 
             int y = 0;
             while (line != null && y < height) {

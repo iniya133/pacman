@@ -1,11 +1,14 @@
 package pacman;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -20,6 +23,9 @@ import pacman.entities.Pickable;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+
+import java.lang.Object;
+
 
 public class UI extends Application implements Observer {
     static private GraphicsContext graphicsContext;
@@ -79,6 +85,44 @@ public class UI extends Application implements Observer {
         primaryStage.setTitle("PacMan");
         primaryStage.setResizable(false);
         Scene scene = new Scene(root, Color.BLACK);
+
+        scene.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case UP:
+                    System.out.println("Up Arrow Pressed");
+                    game.playerMove(Direction.UP);
+                    break;
+                case Z:
+                    System.out.println("Up Arrow Pressed");
+                    game.playerMove(Direction.UP);
+                    break;
+                case DOWN:
+                    System.out.println("Down Arrow Pressed");
+                    game.playerMove(Direction.DOWN);
+                    break;
+                case S:
+                    System.out.println("Down Arrow Pressed");
+                    game.playerMove(Direction.DOWN);
+                    break;
+                case LEFT:
+                    System.out.println("Left Arrow Pressed");
+                    game.playerMove(Direction.LEFT);
+                    break;
+                case Q:
+                    System.out.println("Left Arrow Pressed");
+                    game.playerMove(Direction.LEFT);
+                    break;
+                case RIGHT:
+                    System.out.println("Right Arrow Pressed");
+                    game.playerMove(Direction.RIGHT);
+                    break;
+                case D:
+                    System.out.println("Right Arrow Pressed");
+                    game.playerMove(Direction.RIGHT);
+                    break;
+            }
+        });
+
         primaryStage.setScene(scene);
         primaryStage.show();
 
