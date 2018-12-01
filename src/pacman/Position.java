@@ -20,28 +20,6 @@ class Position {
         return position.x == this.x && position.y == this.y;
     }
 
-    Position move(Direction direction) {
-        int new_x = this.x;
-        int new_y = this.y;
-
-        switch (direction) {
-            case UP:
-                new_y--;
-                break;
-            case DOWN:
-                new_y++;
-                break;
-            case LEFT:
-                new_x--;
-                break;
-            case RIGHT:
-                new_x++;
-                break;
-        }
-
-        return new Position(new_x, new_y);
-    }
-
     public Position clone() {
         return new Position(this.x, this.y);
     }

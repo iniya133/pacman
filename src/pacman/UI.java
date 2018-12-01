@@ -33,6 +33,7 @@ public class UI extends Application implements Observer {
     static private int windowWidth = 900;
     static private int windowHeight = 900;
     static private Image pacmanImage;
+    static private Image pacmanLeftImage;
     static private Image blueGhostImage;
     static private Image greenGhostImage;
     static private Image pickableImage;
@@ -79,7 +80,9 @@ public class UI extends Application implements Observer {
 
         for (Entity entity : entities) {
             if (entity instanceof PacMan) {
-                drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
+                PacMan pacMan = (PacMan) entity;
+
+                drawImage(pacMan.getDirection() == Direction.LEFT ? pacmanLeftImage : pacmanImage, slotSize, paddingLeft, paddingTop, pacMan.getPosition().x, pacMan.getPosition().y, true);
             } else if (entity instanceof Ghost) {
                 drawImage(blueGhostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
             } else if (entity instanceof Pickable) {
@@ -125,6 +128,7 @@ public class UI extends Application implements Observer {
         primaryStage.show();
 
         pacmanImage = new Image("file:assets/pacman.png");
+        pacmanLeftImage = new Image("file:assets/pacman-left.png");
         pickableImage = new Image("file:assets/pickable.png");
         blueGhostImage = new Image("file:assets/blue-ghost.png");
         greenGhostImage = new Image("file:assets/green-ghost.png");
