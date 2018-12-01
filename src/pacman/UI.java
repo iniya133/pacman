@@ -30,6 +30,20 @@ public class UI extends Application implements Observer {
     static private Image blueGhostImage;
     static private Image greenGhostImage;
     static private Image pickableImage;
+    final private double imageRatio = 0.7;
+
+    private void drawImage(Image image, int slotSize, int paddingLeft, int paddingTop, int x, int y, boolean enableRatio) {
+        double topLeftPadding = enableRatio ? (slotSize * (1 - imageRatio) / 2) : 0;
+        double slotSizeScaled = enableRatio ? slotSize * imageRatio : slotSize;
+
+        graphicsContext.drawImage(
+                image,
+                topLeftPadding + paddingLeft + x * slotSize,
+                topLeftPadding + paddingTop + y * slotSize,
+                slotSizeScaled,
+                slotSizeScaled
+        );
+    }
 
     public void update(Observable observable, Object arg) {
         Slot[][] matrix = game.getMatrix();
@@ -59,11 +73,11 @@ public class UI extends Application implements Observer {
 
         for (Entity entity : entities) {
             if (entity instanceof PacMan) {
-                graphicsContext.drawImage(pacmanImage, paddingLeft + entity.getPosition().x * slotSize, paddingTop + entity.getPosition().y * slotSize, slotSize, slotSize);
+                drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
             } else if (entity instanceof Ghost) {
-                graphicsContext.drawImage(greenGhostImage, paddingLeft + entity.getPosition().x * slotSize, paddingTop + entity.getPosition().y * slotSize, slotSize, slotSize);
+                drawImage(blueGhostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
             } else if (entity instanceof Pickable) {
-                graphicsContext.drawImage(pickableImage, paddingLeft + entity.getPosition().x * slotSize, paddingTop + entity.getPosition().y * slotSize, slotSize, slotSize);
+                drawImage(pickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
     }
