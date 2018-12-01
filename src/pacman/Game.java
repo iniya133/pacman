@@ -92,7 +92,7 @@ public class Game extends Observable {
      */
     void load() {
         lock.lock();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("assets/level-1.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("assets/levels/level-1.txt"))) {
             String line = bufferedReader.readLine();
 
             width = Integer.parseInt(line);
@@ -200,6 +200,41 @@ public class Game extends Observable {
         return false;
     }
 
+    private Position getPositionWithDirection(Entity entity, Direction direction) {
+        Position position = entity.getPosition();
+        int new_x = position.x;
+        int new_y = position.y;
+
+        switch (direction) {
+            case UP:
+                if (position.y - 1 >= 0) {
+                    new_y--;
+                }
+                break;
+            case DOWN:
+                if (position.y + 1 <= height - 1) {
+                    new_y++;
+                }
+                break;
+            case LEFT:
+                if (position.x - 1 >= 0) {
+                    new_x--;
+                } else if (entity instanceof PacMan) {
+                    new_x = width - 1;
+                }
+                break;
+            case RIGHT:
+                if (position.x + 1 <= width - 1) {
+                    new_x++;
+                } else if (entity instanceof PacMan) {
+                    new_x = 0;
+                }
+                break;
+        }
+
+        return new Position(new_x, new_y);
+    }
+
     boolean canMove(Entity entity, Position position) {
         lock.lock();
 
@@ -238,7 +273,7 @@ public class Game extends Observable {
         lock.lock();
 
         boolean hasMoved = false;
-        Position newPosition = entity.getPosition().move(direction);
+        Position newPosition = getPositionWithDirection(entity, direction);
         if (canMove(entity, newPosition)) {
             entity.setPosition(newPosition);
             hasMoved = true;
@@ -251,7 +286,6 @@ public class Game extends Observable {
 
         lock.unlock();
 
-
         return hasMoved;
     }
 
@@ -261,8 +295,18 @@ public class Game extends Observable {
      * @param direction {Direction}
      */
     void playerMove(Direction direction) {
-        if (move(pacman, direction)) {
-            lock.lock();
+        lock.lock();
+
+        boolean hasMoved = false;
+        Position newPosition = getPositionWithDirection(pacman, direction);
+        if (canMove(pacman, newPosition)) {
+            pacman.setPosition(newPosition);
+            hasMoved = true;
+        }
+
+        if (hasMoved) {
+            pacman.setDirection(direction);
+
             for (Entity entity : entities) {
                 if (entity instanceof Pickable) {
                     pacman.entities.Pickable pick = (Pickable) entity;
@@ -271,18 +315,21 @@ public class Game extends Observable {
                         entities.remove(entity);
                         break;
                     }
-                }
-                else if (entity instanceof BonusPickable) {
+                } else if (entity instanceof BonusPickable) {
                     pacman.entities.BonusPickable pick = (BonusPickable) entity;
-                    if(pick.getPosition().equals(pacman.getPosition())){
-                        score +=50;
+                    if (pick.getPosition().equals(pacman.getPosition())) {
+                        score += 50;
                         entities.remove(entity);
                         pacman.setSuperPacman();
                         break;
                     }
                 }
             }
-            lock.unlock();
+
+            setChanged();
+            notifyObservers();
         }
+
+        lock.unlock();
     }
 }

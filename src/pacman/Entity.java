@@ -7,11 +7,11 @@ public abstract class Entity {
         return position;
     }
 
-    void setPosition(int x, int y) {
+    public void setPosition(int x, int y) {
         this.position = new Position(x, y);
     }
 
-    void setPosition(Position position) {
+    public void setPosition(Position position) {
         this.position = position.clone();
     }
 }
