@@ -136,7 +136,7 @@ public class UI extends Application implements Observer {
         pacmanImage = new Image("file:assets/sprites/pacman.png");
         pacmanLeftImage = new Image("file:assets/sprites/pacman-left.png");
         pickableImage = new Image("file:assets/sprites/pickable.png");
- 	BonusPickableImage = new Image("file:assets/mega-pickable.png");
+ 	    BonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
         greenGhostImage = new Image("file:assets/sprites/green-ghost.png");
 
