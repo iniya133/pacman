@@ -283,6 +283,11 @@ public class Game extends Observable {
             setChanged();
             notifyObservers();
         }
+        for (Entity ennemy : entities) {
+            if (!(pacman.getSuperPacman()) && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
+                pacman.die();
+            }
+        }
 
         lock.unlock();
 

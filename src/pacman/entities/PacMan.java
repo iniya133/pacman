@@ -22,4 +22,7 @@ public class PacMan extends Entity {
     public void setDirection(Direction _direction) {
         direction = _direction;
     }
+    public void die(){
+        System.out.println("You Died");
+    }
 }
