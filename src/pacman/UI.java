@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import pacman.entities.BonusPickable;
 import pacman.slots.Corridor;
 import pacman.slots.GhostDoor;
 import pacman.slots.Wall;
@@ -36,6 +37,7 @@ public class UI extends Application implements Observer {
     static private Image blueGhostImage;
     static private Image greenGhostImage;
     static private Image pickableImage;
+    static private Image BonusPickableImage;
     final private double imageRatio = 0.7;
 
     private void drawImage(Image image, int slotSize, int paddingLeft, int paddingTop, int x, int y, boolean enableRatio) {
@@ -85,6 +87,9 @@ public class UI extends Application implements Observer {
             } else if (entity instanceof Pickable) {
                 drawImage(pickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
+            else if (entity instanceof BonusPickable) {
+                drawImage(BonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
+            }
         }
     }
 
@@ -126,6 +131,7 @@ public class UI extends Application implements Observer {
 
         pacmanImage = new Image("file:assets/pacman.png");
         pickableImage = new Image("file:assets/pickable.png");
+        BonusPickableImage = new Image("file:assets/mega-pickable.png");
         blueGhostImage = new Image("file:assets/blue-ghost.png");
         greenGhostImage = new Image("file:assets/green-ghost.png");
 

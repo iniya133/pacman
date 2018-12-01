@@ -1,5 +1,6 @@
 package pacman;
 
+import pacman.entities.BonusPickable;
 import pacman.entities.PacMan;
 import pacman.entities.Pickable;
 import pacman.entities.Ghost;
@@ -72,6 +73,9 @@ public class Game extends Observable {
         switch (character) {
             case '4':
                 entity = new Pickable();
+                break;
+            case '6':
+                entity = new BonusPickable();
                 break;
             case '9':
                 entity = new Ghost(this);
@@ -265,6 +269,15 @@ public class Game extends Observable {
                     if (pick.getPosition().equals(pacman.getPosition())) {
                         score += 10;
                         entities.remove(entity);
+                        break;
+                    }
+                }
+                else if (entity instanceof BonusPickable) {
+                    pacman.entities.BonusPickable pick = (BonusPickable) entity;
+                    if(pick.getPosition().equals(pacman.getPosition())){
+                        score +=50;
+                        entities.remove(entity);
+                        pacman.setSuperPacman();
                         break;
                     }
                 }
