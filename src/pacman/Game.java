@@ -27,18 +27,19 @@ public class Game extends Observable {
     private ReentrantLock lock;
     private Entity pacman;
 
-  Game() {
+    Game() {
         lock = new ReentrantLock();
     }
 
     /**
      * Parse a character into a slot.
      * Returns the slot or null if no match found.
+     *
      * @param character {char}
      * @return {Slot | null}
      */
     private Slot characterToSlot(char character) {
-      Slot slot = null;
+        Slot slot = null;
 
         switch (character) {
             case '0':
@@ -56,68 +57,12 @@ public class Game extends Observable {
         }
 
         return slot;
-    }   
-
-    public void playerMove(Direction direction){
-
-        for(Entity entity : entities){
-            if (entity instanceof PacMan) {
-                pacman = entity;
-            }
-        }
-
-        switch(direction){
-            case UP:
-                if(matrix[pacman.getPosition().x][pacman.getPosition().y-1] instanceof Corridor)
-                {
-                    pacman.setPosition(pacman.getPosition().x,pacman.getPosition().y-1);
-                    setChanged();
-                    notifyObservers();
-                }
-                break;
-            case DOWN:
-                if(matrix[pacman.getPosition().x][pacman.getPosition().y+1] instanceof Corridor)
-                {
-                    pacman.setPosition(pacman.getPosition().x,pacman.getPosition().y+1);
-                    setChanged();
-                    notifyObservers();
-                }
-                break;
-            case LEFT:
-                if(pacman.getPosition().x == 0)
-                {
-                    pacman.setPosition(width-1,pacman.getPosition().y);
-                    setChanged();
-                    notifyObservers();
-                }
-                else if(matrix[pacman.getPosition().x-1][pacman.getPosition().y] instanceof Corridor)
-                {
-                    pacman.setPosition(pacman.getPosition().x-1,pacman.getPosition().y);
-                    setChanged();
-                    notifyObservers();
-                }
-                break;
-            case RIGHT:
-                if(pacman.getPosition().x == width -1)
-                {
-                    pacman.setPosition(0,pacman.getPosition().y);
-                    setChanged();
-                    notifyObservers();
-                }
-                else if(matrix[pacman.getPosition().x+1][pacman.getPosition().y] instanceof Corridor)
-                {
-                    pacman.setPosition(pacman.getPosition().x+1,pacman.getPosition().y);
-                    setChanged();
-                    notifyObservers();
-                }
-                break;
-        }
-
     }
 
     /**
      * Parse a character into an entity.
      * Returns the entity or null if no match found.
+     *
      * @param character {char}
      * @return {Entity | null}
      */
@@ -256,12 +201,11 @@ public class Game extends Observable {
 
         boolean canMove;
         try {
-            canMove =  matrix[x][y] instanceof Corridor;
+            canMove = matrix[x][y] instanceof Corridor;
             if (entity instanceof Ghost) {
                 canMove = canMove || matrix[x][y] instanceof GhostDoor;
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             canMove = false;
         }
 
@@ -274,7 +218,8 @@ public class Game extends Observable {
      * Move an entity into a certain direction.
      * Will return true if the move was made or false if it was rejected.
      * Use `canMoveTo` to test if move is allowed.
-     * @param entity {Entity}
+     *
+     * @param entity    {Entity}
      * @param direction {Direction}
      * @return boolean
      */
@@ -301,5 +246,59 @@ public class Game extends Observable {
 
 
         return hasMoved;
+    }
+
+    /**
+     * Move the entity into a certain direction.
+     *
+     * @param direction {Direction}
+     */
+    void playerMove(Direction direction) {
+
+        for (Entity entity : entities) {
+            if (entity instanceof PacMan) {
+                pacman = entity;
+            }
+        }
+
+        switch (direction) {
+            case UP:
+                if (matrix[pacman.getPosition().x][pacman.getPosition().y - 1] instanceof Corridor) {
+                    pacman.setPosition(pacman.getPosition().x, pacman.getPosition().y - 1);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+            case DOWN:
+                if (matrix[pacman.getPosition().x][pacman.getPosition().y + 1] instanceof Corridor) {
+                    pacman.setPosition(pacman.getPosition().x, pacman.getPosition().y + 1);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+            case LEFT:
+                if (pacman.getPosition().x == 0) {
+                    pacman.setPosition(width - 1, pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                } else if (matrix[pacman.getPosition().x - 1][pacman.getPosition().y] instanceof Corridor) {
+                    pacman.setPosition(pacman.getPosition().x - 1, pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+            case RIGHT:
+                if (pacman.getPosition().x == width - 1) {
+                    pacman.setPosition(0, pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                } else if (matrix[pacman.getPosition().x + 1][pacman.getPosition().y] instanceof Corridor) {
+                    pacman.setPosition(pacman.getPosition().x + 1, pacman.getPosition().y);
+                    setChanged();
+                    notifyObservers();
+                }
+                break;
+        }
+
     }
 }
