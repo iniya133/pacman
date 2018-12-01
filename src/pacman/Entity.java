@@ -1,16 +1,17 @@
 package pacman;
 
-public abstract class Entity implements Runnable {
+public abstract class Entity {
     private Position position;
-
-    public void run() {
-
-    }
 
     Position getPosition() {
         return position;
     }
-    void setPosition(int x, int y){
+
+    void setPosition(int x, int y) {
         this.position = new Position(x, y);
+    }
+
+    void setPosition(Position position) {
+        this.position = position.clone();
     }
 }
