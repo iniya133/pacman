@@ -1,14 +1,11 @@
 package pacman;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -19,6 +16,7 @@ import pacman.slots.Wall;
 import pacman.entities.PacMan;
 import pacman.entities.Ghost;
 import pacman.entities.Pickable;
+
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -127,11 +125,11 @@ public class UI extends Application implements Observer {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        pacmanImage = new Image("file:assets/pacman.png");
-        pacmanLeftImage = new Image("file:assets/pacman-left.png");
-        pickableImage = new Image("file:assets/pickable.png");
-        blueGhostImage = new Image("file:assets/blue-ghost.png");
-        greenGhostImage = new Image("file:assets/green-ghost.png");
+        pacmanImage = new Image("file:assets/sprites/pacman.png");
+        pacmanLeftImage = new Image("file:assets/sprites/pacman-left.png");
+        pickableImage = new Image("file:assets/sprites/pickable.png");
+        blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
+        greenGhostImage = new Image("file:assets/sprites/green-ghost.png");
 
         game.load();
     }

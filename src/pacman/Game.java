@@ -88,7 +88,7 @@ public class Game extends Observable {
      */
     void load() {
         lock.lock();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("assets/level-1.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("assets/levels/level-1.txt"))) {
             String line = bufferedReader.readLine();
 
             width = Integer.parseInt(line);
