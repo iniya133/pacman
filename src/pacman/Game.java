@@ -25,7 +25,7 @@ public class Game extends Observable {
     private int height;
     private HashMap<Entity, Thread> threads;
     private ReentrantLock lock;
-    private Entity pacman;
+    private PacMan pacman;
 
     Game() {
         lock = new ReentrantLock();
@@ -152,7 +152,7 @@ public class Game extends Observable {
                     System.out.println("Created thread");
                 }
                 if (entity instanceof PacMan) {
-                    pacman = entity;
+                    pacman = (PacMan) entity;
                 }
             }
         } catch (Exception ex) {
