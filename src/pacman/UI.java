@@ -43,7 +43,9 @@ public class UI extends Application implements Observer {
     static private Image blueGhostImage;
     static private Image greenGhostImage;
     static private Image pickableImage;
-    static private Image BonusPickableImage;
+    static private Image frightenedGhostImage;
+    static private Image ghostImage;
+    static private Image bonusPickableImage;
     static private Text scoreText;
     static private TextFlow textFlow;
     final private double imageRatio = 0.7;
@@ -100,16 +102,22 @@ public class UI extends Application implements Observer {
                 pacMan = (PacMan) entity;
                 drawImage(pacMan.getDirection() == Direction.LEFT ? pacmanLeftImage : pacmanImage, slotSize, paddingLeft, paddingTop, pacMan.getPosition().x, pacMan.getPosition().y, true);
             } else if (entity instanceof Ghost) {
-                drawImage(blueGhostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
+                    drawImage(ghostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
             } else if (entity instanceof Pickable) {
                 drawImage(pickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             } else if (entity instanceof BonusPickable) {
-                drawImage(BonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
+                drawImage(bonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
-        if(pacMan!=null){
+        if (pacMan != null) {
             lifes = pacMan.getLifes();
-        }else{
+            if(pacMan.getSuperPacman()){
+                ghostImage = frightenedGhostImage;
+            }else
+            {
+                ghostImage = blueGhostImage;
+            }
+        } else {
             lifes = 0;
         }
 
@@ -117,9 +125,8 @@ public class UI extends Application implements Observer {
         scoreText.setX(slotSize * textSlotX + paddingTop);
         scoreText.setY(slotSize * textSlotY + paddingTop);
 
-        for (int i = 0; i < lifes; i++)
-        {
-            if(lifes>0){
+        for (int i = 0; i < lifes; i++) {
+            if (lifes > 0) {
                 drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
             }
         }
@@ -150,6 +157,7 @@ public class UI extends Application implements Observer {
 
         root.getChildren().add(scoreText);
 
+        ghostImage=blueGhostImage;
 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
@@ -178,8 +186,9 @@ public class UI extends Application implements Observer {
         pacmanImage = new Image("file:assets/sprites/pacman.png");
         pacmanLeftImage = new Image("file:assets/sprites/pacman-left.png");
         pickableImage = new Image("file:assets/sprites/pickable.png");
-        BonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
+        bonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
+        frightenedGhostImage = new Image("file:assets/sprites/frightened-ghost.png");
         greenGhostImage = new Image("file:assets/sprites/green-ghost.png");
 
         game.load();
