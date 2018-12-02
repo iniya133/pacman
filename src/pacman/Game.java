@@ -21,13 +21,11 @@ public class Game extends Observable {
     private Slot[][] matrix;
     private ArrayList<Entity> entities;
     private int score = 0;
-    private int pickables;
     private int width;
     private int height;
-    private HashMap<Entity, Thread> threads;
     private ReentrantLock lock;
     private PacMan pacman;
-    final Position pacmanRespawnPos = new Position(14, 17);
+    private final Position pacmanRespawnPos = new Position(14, 17);
 
     Game() {
         lock = new ReentrantLock();
@@ -88,7 +86,7 @@ public class Game extends Observable {
         return entity;
     }
 
-    public int getScore() {
+    int getScore() {
         return score;
     }
 
@@ -111,7 +109,6 @@ public class Game extends Observable {
 
             matrix = new Slot[width][height];
             entities = new ArrayList<>();
-            threads = new HashMap<>();
 
 
             int y = 0;
@@ -160,9 +157,7 @@ public class Game extends Observable {
                     Ghost ghost = (Ghost) entity;
                     Thread thread = new Thread(ghost);
                     thread.setDaemon(true);
-                    threads.put(entity, thread);
                     thread.start();
-                    System.out.println("Created thread");
                 }
                 if (entity instanceof PacMan) {
                     pacman = (PacMan) entity;
