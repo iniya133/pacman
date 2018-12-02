@@ -285,7 +285,22 @@ public class Game extends Observable {
         }
         for (Entity ennemy : entities) {
             if (!(pacman.getSuperPacman()) && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
-                pacman.die();
+                pacman.die(); // Il faudrait déplacer la suite dans cette fonction
+                for (Entity testPacman : entities) {
+                    if (testPacman instanceof PacMan) {
+                        entities.remove(testPacman);
+                        break;
+                    }
+                }
+                if (pacman.getLifes() > 0) {
+                    PacMan newPacMan = pacman;
+                    newPacMan.setPosition(14, 17);
+                    entities.add(newPacMan);
+                    pacman = newPacMan;
+                }
+                setChanged();
+                notifyObservers();
+                break;
             }
         }
 
