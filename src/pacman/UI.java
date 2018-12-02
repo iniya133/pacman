@@ -1,37 +1,31 @@
 package pacman;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import pacman.entities.BonusPickable;
-import pacman.slots.Corridor;
-import pacman.slots.GhostDoor;
-import pacman.slots.Wall;
-
 import pacman.entities.PacMan;
 import pacman.entities.Ghost;
 import pacman.entities.Pickable;
 
-
-import javafx.scene.text.Text;
+import pacman.slots.Corridor;
+import pacman.slots.GhostDoor;
+import pacman.slots.Wall;
 
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import java.lang.Object;
-
 
 public class UI extends Application implements Observer {
     static private GraphicsContext graphicsContext;
@@ -41,19 +35,12 @@ public class UI extends Application implements Observer {
     static private Image pacmanImage;
     static private Image pacmanLeftImage;
     static private Image blueGhostImage;
-    static private Image greenGhostImage;
     static private Image pickableImage;
     static private Image BonusPickableImage;
     static private Text scoreText;
-    static private TextFlow textFlow;
-    final private double imageRatio = 0.7;
-    final private int textSlotX = 2;
-    final private int textSlotY = 12;
-    final private int lifeSlotX = 23;
-    final private int lifeSlotY = 12;
-    private int lifes = 3;
 
     private void drawImage(Image image, int slotSize, int paddingLeft, int paddingTop, int x, int y, boolean enableRatio) {
+        double imageRatio = 0.7;
         double topLeftPadding = enableRatio ? (slotSize * (1 - imageRatio) / 2) : 0;
         double slotSizeScaled = enableRatio ? slotSize * imageRatio : slotSize;
 
@@ -107,31 +94,31 @@ public class UI extends Application implements Observer {
                 drawImage(BonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
-        if(pacMan!=null){
+        int lifes = 3;
+        if (pacMan != null) {
             lifes = pacMan.getLifes();
-        }else{
+        } else {
             lifes = 0;
         }
 
         scoreText.setText(String.valueOf(game.getScore()));
+        int textSlotX = 2;
         scoreText.setX(slotSize * textSlotX + paddingTop);
+        int textSlotY = 12;
         scoreText.setY(slotSize * textSlotY + paddingTop);
 
-        for (int i = 0; i < lifes; i++)
-        {
-            if(lifes>0){
-                drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
-            }
+        for (int i = 0; i < lifes; i++) {
+            int lifeSlotX = 23;
+            int lifeSlotY = 12;
+            drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
         }
-
-
     }
 
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
 
-        textFlow = new TextFlow();
+        TextFlow textFlow = new TextFlow();
         scoreText = new Text();
         scoreText.setFont(Font.font("Helvetica", 40));
         scoreText.setFill(Color.WHITE);
@@ -147,9 +134,7 @@ public class UI extends Application implements Observer {
         primaryStage.setResizable(false);
         Scene scene = new Scene(root, Color.BLACK);
 
-
         root.getChildren().add(scoreText);
-
 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
@@ -180,7 +165,6 @@ public class UI extends Application implements Observer {
         pickableImage = new Image("file:assets/sprites/pickable.png");
         BonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
-        greenGhostImage = new Image("file:assets/sprites/green-ghost.png");
 
         game.load();
 
