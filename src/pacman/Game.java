@@ -85,7 +85,7 @@ public class Game extends Observable {
                 entity = new Ghost(this);
                 break;
             case '8':
-                entity = new PacMan();
+                entity = new PacMan(this);
                 break;
         }
         return entity;
@@ -170,6 +170,10 @@ public class Game extends Observable {
                 }
                 if (entity instanceof PacMan) {
                     pacman = (PacMan) entity;
+                    Thread thread = new Thread(pacman);
+                    threads.add(thread);
+                    thread.setDaemon(true);
+                    thread.start();
                 }
             }
         } catch (Exception ex) {
@@ -308,7 +312,7 @@ public class Game extends Observable {
      *
      * @param direction {Direction}
      */
-    void playerMove(Direction direction) {
+    public void playerMove(Direction direction) {
         lock.lock();
 
         boolean hasMoved = false;

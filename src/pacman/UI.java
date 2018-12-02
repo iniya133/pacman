@@ -54,7 +54,6 @@ public class UI extends Application implements Observer {
     final private int textSlotY = 12;
     final private int lifeSlotX = 23;
     final private int lifeSlotY = 12;
-    private int lifes = 3;
 
     private void drawImage(Image image, int slotSize, int paddingLeft, int paddingTop, int x, int y, boolean enableRatio) {
         double imageRatio = 0.7;
@@ -175,23 +174,26 @@ public class UI extends Application implements Observer {
 
 
         scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case UP:
-                case Z:
-                    game.playerMove(Direction.UP);
-                    break;
-                case DOWN:
-                case S:
-                    game.playerMove(Direction.DOWN);
-                    break;
-                case LEFT:
-                case Q:
-                    game.playerMove(Direction.LEFT);
-                    break;
-                case RIGHT:
-                case D:
-                    game.playerMove(Direction.RIGHT);
-                    break;
+            PacMan pacMan = game.getPacman();
+            if (pacMan != null) {
+                switch (e.getCode()) {
+                    case UP:
+                    case Z:
+                        pacMan.setNextDirection(Direction.UP);
+                        break;
+                    case DOWN:
+                    case S:
+                        pacMan.setNextDirection(Direction.DOWN);
+                        break;
+                    case LEFT:
+                    case Q:
+                        pacMan.setNextDirection(Direction.LEFT);
+                        break;
+                    case RIGHT:
+                    case D:
+                        pacMan.setNextDirection(Direction.RIGHT);
+                        break;
+                }
             }
         });
 
