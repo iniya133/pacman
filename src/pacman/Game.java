@@ -171,7 +171,7 @@ public class Game extends Observable {
         lock.unlock();
     }
 
-    Slot[][] getMatrix() {
+    public Slot[][] getMatrix() {
         lock.lock();
 
         Slot[][] matrixClone = matrix.clone();
@@ -181,12 +181,12 @@ public class Game extends Observable {
         return matrixClone;
     }
 
-    int getHeight() {
+    public int getHeight() {
         return height;
     }
 
 
-    int getWidth() {
+    public int getWidth() {
         return width;
     }
 
@@ -223,14 +223,14 @@ public class Game extends Observable {
             case LEFT:
                 if (position.x - 1 >= 0) {
                     new_x--;
-                } else if (entity instanceof PacMan) {
+                } else {
                     new_x = width - 1;
                 }
                 break;
             case RIGHT:
                 if (position.x + 1 <= width - 1) {
                     new_x++;
-                } else if (entity instanceof PacMan) {
+                } else {
                     new_x = 0;
                 }
                 break;
@@ -346,7 +346,9 @@ public class Game extends Observable {
         for (Entity entity : entities) {
             if (pacman != null && entity instanceof Ghost && entity.getPosition().equals(pacman.getPosition())) {
                 if (pacman.isSuperPacman()) {
-                    entity.setPosition(ghostRespawnPos);
+                    Ghost ghost = (Ghost) entity;
+                    ghost.setHasExited(false);
+                    ghost.setPosition(ghostRespawnPos);
                     score += 100;
                 } else {
                     pacman.die();
