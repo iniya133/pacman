@@ -27,6 +27,7 @@ public class Game extends Observable {
     private HashMap<Entity, Thread> threads;
     private ReentrantLock lock;
     private PacMan pacman;
+    final Position pacmanRespawnPos = new Position(14, 17);
 
     Game() {
         lock = new ReentrantLock();
@@ -85,6 +86,14 @@ public class Game extends Observable {
                 break;
         }
         return entity;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public PacMan getPacman() {
+        return pacman;
     }
 
     /**
@@ -283,16 +292,11 @@ public class Game extends Observable {
             setChanged();
             notifyObservers();
         }
-        for (Entity ennemy : entities) {
-            if (!(pacman.getSuperPacman()) && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
-                pacman.die();
-            }
-        }
-
+        testDeath();
         lock.unlock();
 
         return hasMoved;
-    }
+}
 
     /**
      * Move the entity into a certain direction.
@@ -330,11 +334,42 @@ public class Game extends Observable {
                     }
                 }
             }
+            testDeath();
 
             setChanged();
             notifyObservers();
         }
 
+        lock.unlock();
+    }
+
+    private void testDeath(){
+        lock.lock();
+        for (Entity ennemy : entities) {
+            if (pacman != null && !(pacman.getSuperPacman()) && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
+                pacman.die();
+                if (pacman.getLifes() > 0) {
+                    pacman.setPosition(pacmanRespawnPos);
+                } else {
+                    for (Entity e : entities) {
+                        if (e instanceof PacMan) {
+                            entities.remove(e);
+                            break;
+                        }
+                    }
+                    pacman = null;
+                }
+                setChanged();
+                notifyObservers();
+                break;
+            } else if (pacman != null && pacman.getSuperPacman() && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
+                ennemy.setPosition(pacmanRespawnPos.x,pacmanRespawnPos.y-2);
+                score += 100;
+                setChanged();
+                notifyObservers();
+                break;
+            }
+        }
         lock.unlock();
     }
 }
