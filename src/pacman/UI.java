@@ -47,6 +47,7 @@ public class UI extends Application implements Observer {
     static private Image ghostImage;
     static private Image bonusPickableImage;
     static private Text scoreText;
+    static private Text gameOverText;
     static private TextFlow textFlow;
     final private double imageRatio = 0.7;
     final private int textSlotX = 2;
@@ -110,7 +111,7 @@ public class UI extends Application implements Observer {
                 drawImage(bonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
-        int lifes;
+
         if (pacMan != null) {
             lifes = pacMan.getLifes();
             if (pacMan.getSuperPacman()) {
@@ -120,8 +121,16 @@ public class UI extends Application implements Observer {
             }
         } else {
             lifes = 0;
+            gameOverText.setText("YOU LOSE");
+        }
+        if(game.getPickableLeft()<=0){
+            gameOverText.setFill(Color.GREEN);
+            gameOverText.setText("YOU WIN");
         }
 
+        gameOverText.setX(slotSize * (game.getWidth() / 2 - 5) + paddingLeft);
+        gameOverText.setY(slotSize * game.getWidth() / 2 + paddingTop);
+        
         scoreText.setText(String.valueOf(game.getScore()));
         scoreText.setX(slotSize * textSlotX + paddingTop);
         scoreText.setY(slotSize * textSlotY + paddingTop);
@@ -136,16 +145,21 @@ public class UI extends Application implements Observer {
     @Override
     public void start(Stage primaryStage) {
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
-            System.out.println("Handler caught exception: "+throwable.getMessage());
+            System.out.println("Handler caught exception: " + throwable.getMessage());
         });
 
         Group root = new Group();
 
         TextFlow textFlow = new TextFlow();
         scoreText = new Text();
+        gameOverText = new Text();
         scoreText.setFont(Font.font("Helvetica", 40));
+        gameOverText.setFont(Font.font("Helvetica", 60));
         scoreText.setFill(Color.WHITE);
+        gameOverText.setFill(Color.RED);
+
         textFlow.getChildren().add(scoreText);
+        textFlow.getChildren().add(gameOverText);
 
         Canvas canvas = new Canvas(windowWidth, windowHeight);
         graphicsContext = canvas.getGraphicsContext2D();
@@ -159,6 +173,7 @@ public class UI extends Application implements Observer {
 
 
         root.getChildren().add(scoreText);
+        root.getChildren().add(gameOverText);
 
 
         scene.setOnKeyPressed(e -> {

@@ -20,6 +20,7 @@ public class Game extends Observable {
     private Slot[][] matrix;
     private ArrayList<Entity> entities;
     private int score = 0;
+    private int pickableLeft = 0;
     private int width;
     private int height;
     private ReentrantLock lock;
@@ -72,9 +73,11 @@ public class Game extends Observable {
         switch (character) {
             case '4':
                 entity = new Pickable();
+                pickableLeft++;
                 break;
             case '6':
                 entity = new BonusPickable();
+                pickableLeft++;
                 break;
             case '9':
                 entity = new Ghost(this);
@@ -88,6 +91,9 @@ public class Game extends Observable {
 
     int getScore() {
         return score;
+    }
+    int getPickableLeft(){
+        return pickableLeft;
     }
 
     public PacMan getPacman() {
@@ -317,6 +323,7 @@ public class Game extends Observable {
                     if (pick.getPosition().equals(pacman.getPosition())) {
                         score += 10;
                         entities.remove(entity);
+                        pickableLeft--;
                         break;
                     }
                 } else if (entity instanceof BonusPickable) {
@@ -324,6 +331,7 @@ public class Game extends Observable {
                     if (pick.getPosition().equals(pacman.getPosition())) {
                         score += 50;
                         entities.remove(entity);
+                        pickableLeft--;
                         pacman.setSuperPacman();
                         break;
                     }
