@@ -110,13 +110,12 @@ public class UI extends Application implements Observer {
                 drawImage(bonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
-        int lifes = 3;
+        int lifes;
         if (pacMan != null) {
             lifes = pacMan.getLifes();
-            if(pacMan.getSuperPacman()){
+            if (pacMan.getSuperPacman()) {
                 ghostImage = frightenedGhostImage;
-            }else
-            {
+            } else {
                 ghostImage = blueGhostImage;
             }
         } else {
@@ -128,9 +127,7 @@ public class UI extends Application implements Observer {
         scoreText.setY(slotSize * textSlotY + paddingTop);
 
         for (int i = 0; i < lifes; i++) {
-            if (lifes > 0) {
-                drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
-            }
+            drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
         }
 
 
@@ -138,6 +135,10 @@ public class UI extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) {
+        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            System.out.println("Handler caught exception: "+throwable.getMessage());
+        });
+
         Group root = new Group();
 
         TextFlow textFlow = new TextFlow();
