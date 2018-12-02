@@ -103,11 +103,11 @@ public class UI extends Application implements Observer {
                 pacMan = (PacMan) entity;
                 drawImage(pacMan.getDirection() == Direction.LEFT ? pacmanLeftImage : pacmanImage, slotSize, paddingLeft, paddingTop, pacMan.getPosition().x, pacMan.getPosition().y, true);
             } else if (entity instanceof Ghost) {
-                drawImage(blueGhostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
+                drawImage(ghostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
             } else if (entity instanceof Pickable) {
                 drawImage(pickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             } else if (entity instanceof BonusPickable) {
-                drawImage(BonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
+                drawImage(bonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
         int lifes = 3;
@@ -187,7 +187,7 @@ public class UI extends Application implements Observer {
         pacmanImage = new Image("file:assets/sprites/pacman.png");
         pacmanLeftImage = new Image("file:assets/sprites/pacman-left.png");
         pickableImage = new Image("file:assets/sprites/pickable.png");
-        BonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
+        bonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
         frightenedGhostImage = new Image("file:assets/sprites/frightened-ghost.png");
         greenGhostImage = new Image("file:assets/sprites/green-ghost.png");

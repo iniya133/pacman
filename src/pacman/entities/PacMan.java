@@ -13,6 +13,10 @@ public class PacMan extends Entity {
     private final int SUPER_PACMAN_TIMEOUT = 10; // seconds
     private Timer timer = new Timer();
 
+    public boolean getSuperPacman(){
+        return superPacman;
+    }
+
     public void setLifes(int _lifes) {
         lifes = _lifes;
     }
