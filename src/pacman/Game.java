@@ -88,6 +88,13 @@ public class Game extends Observable {
         return entity;
     }
 
+    public int getScore(){
+        return score;
+    }
+    public PacMan getPacman(){
+        return pacman;
+    }
+
     /**
      * Loads a level in the game instance.
      */
