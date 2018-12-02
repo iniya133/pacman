@@ -46,7 +46,6 @@ public class UI extends Application implements Observer {
     static private Image BonusPickableImage;
     static private Text scoreText;
     static private TextFlow textFlow;
-    private PacMan pacMan;
     final private double imageRatio = 0.7;
     final private int textSlotX = 2;
     final private int textSlotY = 12;
@@ -69,6 +68,9 @@ public class UI extends Application implements Observer {
 
     public void update(Observable observable, Object arg) {
         Slot[][] matrix = game.getMatrix();
+
+        PacMan pacMan = null;
+
 
         int slotSize = Math.max(windowWidth / game.getWidth(), windowHeight / game.getHeight());
 
@@ -96,7 +98,6 @@ public class UI extends Application implements Observer {
         for (Entity entity : entities) {
             if (entity instanceof PacMan) {
                 pacMan = (PacMan) entity;
-
                 drawImage(pacMan.getDirection() == Direction.LEFT ? pacmanLeftImage : pacmanImage, slotSize, paddingLeft, paddingTop, pacMan.getPosition().x, pacMan.getPosition().y, true);
             } else if (entity instanceof Ghost) {
                 drawImage(blueGhostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
@@ -129,8 +130,6 @@ public class UI extends Application implements Observer {
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
-
-        pacMan = null;
 
         textFlow = new TextFlow();
         scoreText = new Text();
