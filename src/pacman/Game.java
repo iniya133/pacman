@@ -88,10 +88,11 @@ public class Game extends Observable {
         return entity;
     }
 
-    public int getScore(){
+    public int getScore() {
         return score;
     }
-    public PacMan getPacman(){
+
+    public PacMan getPacman() {
         return pacman;
     }
 
@@ -308,13 +309,19 @@ public class Game extends Observable {
                 setChanged();
                 notifyObservers();
                 break;
+            } else if (pacman != null && pacman.getSuperPacman() && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
+                entities.remove(ennemy);
+                setChanged();
+                notifyObservers();
+                break;
             }
         }
+
 
         lock.unlock();
 
         return hasMoved;
-    }
+}
 
     /**
      * Move the entity into a certain direction.
