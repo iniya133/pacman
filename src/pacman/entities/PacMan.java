@@ -8,17 +8,19 @@ public class PacMan extends Entity {
     private Direction direction;
     private int lifes = 3;
 
-    public void setLifes(int _lifes){
+    public void setLifes(int _lifes) {
         lifes = _lifes;
     }
-    public void upLifes(){
-        lifes ++;
-    }
-    public void loseLife(){
-        lifes --;
+
+    public void upLifes() {
+        lifes++;
     }
 
-    public int getLifes(){
+    public void loseLife() {
+        lifes--;
+    }
+
+    public int getLifes() {
         return lifes;
     }
 
@@ -37,7 +39,8 @@ public class PacMan extends Entity {
     public void setDirection(Direction _direction) {
         direction = _direction;
     }
-    public void die(){
+
+    public void die() {
         System.out.println("You Died");
         loseLife();
         System.out.println(lifes);

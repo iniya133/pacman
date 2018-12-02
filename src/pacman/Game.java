@@ -27,6 +27,7 @@ public class Game extends Observable {
     private HashMap<Entity, Thread> threads;
     private ReentrantLock lock;
     private PacMan pacman;
+    final Position pacmanRespawnPos = new Position(14, 17);
 
     Game() {
         lock = new ReentrantLock();
@@ -285,18 +286,17 @@ public class Game extends Observable {
         }
         for (Entity ennemy : entities) {
             if (!(pacman.getSuperPacman()) && ennemy instanceof Ghost && ennemy.getPosition().equals(pacman.getPosition())) {
-                pacman.die(); // Il faudrait déplacer la suite dans cette fonction
-                for (Entity testPacman : entities) {
-                    if (testPacman instanceof PacMan) {
-                        entities.remove(testPacman);
-                        break;
-                    }
-                }
+                pacman.die();
                 if (pacman.getLifes() > 0) {
-                    PacMan newPacMan = pacman;
-                    newPacMan.setPosition(14, 17);
-                    entities.add(newPacMan);
-                    pacman = newPacMan;
+                    pacman.setPosition(pacmanRespawnPos);
+                } else {
+                    for (Entity e : entities) {
+                        if (e instanceof PacMan) {
+                            entities.remove(e);
+                            break;
+                        }
+                    }
+                    pacman = null;
                 }
                 setChanged();
                 notifyObservers();
