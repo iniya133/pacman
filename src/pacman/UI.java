@@ -75,7 +75,6 @@ public class UI extends Application implements Observer {
 
         PacMan pacMan = null;
 
-
         int slotSize = Math.max(windowWidth / game.getWidth(), windowHeight / game.getHeight());
 
         int paddingLeft = (windowWidth - slotSize * game.getWidth()) / 2;
@@ -112,33 +111,32 @@ public class UI extends Application implements Observer {
             }
         }
 
-        if (pacMan != null) {
-            lifes = pacMan.getLifes();
-            if (pacMan.getSuperPacman()) {
-                ghostImage = frightenedGhostImage;
-            } else {
-                ghostImage = blueGhostImage;
-            }
-        } else {
-            lifes = 0;
+        if (game.hasLost()) {
+            gameOverText.setFill(Color.RED);
             gameOverText.setText("YOU LOSE");
-        }
-        if(game.getPickableLeft()<=0){
+        } else if (game.hasWon()) {
             gameOverText.setFill(Color.GREEN);
             gameOverText.setText("YOU WIN");
         }
 
-        gameOverText.setX(slotSize * (game.getWidth() / 2 - 5) + paddingLeft);
-        gameOverText.setY(slotSize * game.getWidth() / 2 + paddingTop);
-        
+        if (pacMan != null && pacMan.getSuperPacman()) {
+            ghostImage = frightenedGhostImage;
+        } else {
+            ghostImage = blueGhostImage;
+        }
+
+        gameOverText.setX(slotSize * (game.getWidth() / 2.0 - 5) + paddingLeft);
+        gameOverText.setY(slotSize * game.getWidth() / 2.0 + paddingTop);
+
         scoreText.setText(String.valueOf(game.getScore()));
         scoreText.setX(slotSize * textSlotX + paddingTop);
         scoreText.setY(slotSize * textSlotY + paddingTop);
 
-        for (int i = 0; i < lifes; i++) {
-            drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
+        if (pacMan != null) {
+            for (int i = 0; i < pacMan.getLifes(); i++) {
+                drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
+            }
         }
-
 
     }
 

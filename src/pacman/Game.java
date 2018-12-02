@@ -23,13 +23,17 @@ public class Game extends Observable {
     private int pickableLeft = 0;
     private int width;
     private int height;
+    private boolean won = false;
+    private boolean lost = false;
     private ReentrantLock lock;
     private PacMan pacman;
     private final Position pacmanRespawnPos = new Position(14, 17);
     private final Position ghostRespawnPos = new Position(14, 15);
+    private ArrayList<Thread> threads;
 
     Game() {
         lock = new ReentrantLock();
+        threads = new ArrayList<>();
     }
 
     /**
@@ -73,11 +77,9 @@ public class Game extends Observable {
         switch (character) {
             case '4':
                 entity = new Pickable();
-                pickableLeft++;
                 break;
             case '6':
                 entity = new BonusPickable();
-                pickableLeft++;
                 break;
             case '9':
                 entity = new Ghost(this);
@@ -91,9 +93,6 @@ public class Game extends Observable {
 
     int getScore() {
         return score;
-    }
-    int getPickableLeft(){
-        return pickableLeft;
     }
 
     public PacMan getPacman() {
@@ -147,6 +146,9 @@ public class Game extends Observable {
                     if (entity != null) {
                         entity.setPosition(x, y);
                         entities.add(entity);
+                        if (entity instanceof Pickable || entity instanceof BonusPickable) {
+                            pickableLeft++;
+                        }
                     }
                     x += 1;
                 }
@@ -162,6 +164,7 @@ public class Game extends Observable {
                 if (entity instanceof Ghost) {
                     Ghost ghost = (Ghost) entity;
                     Thread thread = new Thread(ghost);
+                    threads.add(thread);
                     thread.setDaemon(true);
                     thread.start();
                 }
@@ -294,6 +297,7 @@ public class Game extends Observable {
             notifyObservers();
         }
         testDeath();
+        testEnded();
         lock.unlock();
 
         return hasMoved;
@@ -338,6 +342,7 @@ public class Game extends Observable {
                 }
             }
             testDeath();
+            testEnded();
 
             setChanged();
             notifyObservers();
@@ -379,5 +384,27 @@ public class Game extends Observable {
             }
         }
         lock.unlock();
+    }
+
+    private void testEnded() {
+        if (pacman == null || pacman.getLifes() == 0) {
+            lost = true;
+            for (Thread thread : threads) {
+                thread.interrupt();
+            }
+        } else if (pickableLeft == 0) {
+            won = true;
+            for (Thread thread : threads) {
+                thread.interrupt();
+            }
+        }
+    }
+
+    public boolean hasWon() {
+        return won;
+    }
+
+    public boolean hasLost() {
+        return lost;
     }
 }
