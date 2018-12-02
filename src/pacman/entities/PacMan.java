@@ -2,6 +2,7 @@ package pacman.entities;
 
 import pacman.Direction;
 import pacman.Entity;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -9,8 +10,8 @@ public class PacMan extends Entity {
     private boolean superPacman = false;
     private Direction direction;
     private int lifes = 3;
-    private int secondsSuperPacman = 10;
-    Timer timer = new Timer();
+    private final int SUPER_PACMAN_TIMEOUT = 10; // seconds
+    private Timer timer = new Timer();
 
     public void setLifes(int _lifes) {
         lifes = _lifes;
@@ -18,10 +19,6 @@ public class PacMan extends Entity {
 
     public void upLifes() {
         lifes++;
-    }
-
-    public void loseLife() {
-        lifes--;
     }
 
     public int getLifes() {
@@ -35,10 +32,10 @@ public class PacMan extends Entity {
             public void run() {
                 superPacman = false;
             }
-        }, secondsSuperPacman*1000);
+        }, SUPER_PACMAN_TIMEOUT * 1000);
     }
 
-    public boolean getSuperPacman() {
+    public boolean isSuperPacman() {
         return superPacman;
     }
 
@@ -51,8 +48,6 @@ public class PacMan extends Entity {
     }
 
     public void die() {
-        System.out.println("You Died");
-        loseLife();
-        System.out.println(lifes);
+        lifes--;
     }
 }
