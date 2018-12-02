@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import pacman.entities.BonusPickable;
@@ -21,6 +23,8 @@ import pacman.entities.PacMan;
 import pacman.entities.Ghost;
 import pacman.entities.Pickable;
 
+
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -40,7 +44,15 @@ public class UI extends Application implements Observer {
     static private Image greenGhostImage;
     static private Image pickableImage;
     static private Image BonusPickableImage;
+    static private Text scoreText;
+    static private TextFlow textFlow;
+    private PacMan pacMan;
     final private double imageRatio = 0.7;
+    final private int textSlotX = 2;
+    final private int textSlotY = 12;
+    final private int lifeSlotX = 23;
+    final private int lifeSlotY = 12;
+    private int lifes = 3;
 
     private void drawImage(Image image, int slotSize, int paddingLeft, int paddingTop, int x, int y, boolean enableRatio) {
         double topLeftPadding = enableRatio ? (slotSize * (1 - imageRatio) / 2) : 0;
@@ -83,31 +95,62 @@ public class UI extends Application implements Observer {
 
         for (Entity entity : entities) {
             if (entity instanceof PacMan) {
-                PacMan pacMan = (PacMan) entity;
+                pacMan = (PacMan) entity;
 
                 drawImage(pacMan.getDirection() == Direction.LEFT ? pacmanLeftImage : pacmanImage, slotSize, paddingLeft, paddingTop, pacMan.getPosition().x, pacMan.getPosition().y, true);
             } else if (entity instanceof Ghost) {
                 drawImage(blueGhostImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, true);
             } else if (entity instanceof Pickable) {
                 drawImage(pickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
-            }
-            else if (entity instanceof BonusPickable) {
+            } else if (entity instanceof BonusPickable) {
                 drawImage(BonusPickableImage, slotSize, paddingLeft, paddingTop, entity.getPosition().x, entity.getPosition().y, false);
             }
         }
+        if(pacMan!=null){
+            lifes = pacMan.getLifes();
+        }else{
+            lifes = 0;
+        }
+
+        scoreText.setText(String.valueOf(game.getScore()));
+        scoreText.setX(slotSize * textSlotX + paddingTop);
+        scoreText.setY(slotSize * textSlotY + paddingTop);
+
+        for (int i = 0; i < lifes; i++)
+        {
+            if(lifes>0){
+                drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
+            }
+        }
+
+
     }
 
     @Override
     public void start(Stage primaryStage) {
         Group root = new Group();
+
+        pacMan = null;
+
+        textFlow = new TextFlow();
+        scoreText = new Text();
+        scoreText.setFont(Font.font("Helvetica", 40));
+        scoreText.setFill(Color.WHITE);
+        textFlow.getChildren().add(scoreText);
+
         Canvas canvas = new Canvas(windowWidth, windowHeight);
         graphicsContext = canvas.getGraphicsContext2D();
 
         root.getChildren().add(canvas);
+        root.getChildren().add(textFlow);
 
         primaryStage.setTitle("PacMan");
         primaryStage.setResizable(false);
         Scene scene = new Scene(root, Color.BLACK);
+
+
+        root.getChildren().add(scoreText);
+
 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
@@ -136,11 +179,12 @@ public class UI extends Application implements Observer {
         pacmanImage = new Image("file:assets/sprites/pacman.png");
         pacmanLeftImage = new Image("file:assets/sprites/pacman-left.png");
         pickableImage = new Image("file:assets/sprites/pickable.png");
- 	    BonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
+        BonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
         greenGhostImage = new Image("file:assets/sprites/green-ghost.png");
 
         game.load();
+
     }
 
     void bootstrap(Game g) {
