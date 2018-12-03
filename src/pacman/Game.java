@@ -393,15 +393,18 @@ public class Game extends Observable {
     private void testEnded() {
         if (pacman == null || pacman.getLifes() == 0) {
             lost = true;
-            for (Thread thread : threads) {
-                thread.interrupt();
-            }
+            cleanThreads();
         } else if (pickableLeft == 0) {
             won = true;
-            for (Thread thread : threads) {
-                thread.interrupt();
-            }
+            cleanThreads();
         }
+    }
+
+    public void cleanThreads() {
+        for (Thread thread : threads) {
+            thread.interrupt();
+        }
+        threads.clear();
     }
 
     public boolean hasWon() {

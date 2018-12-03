@@ -1,19 +1,19 @@
 package pacman;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
+import javafx.stage.WindowEvent;
 import pacman.entities.BonusPickable;
 import pacman.slots.Corridor;
 import pacman.slots.GhostDoor;
@@ -23,15 +23,15 @@ import pacman.entities.PacMan;
 import pacman.entities.Ghost;
 import pacman.entities.Pickable;
 
-
 import javafx.scene.text.Text;
+import sun.nio.ch.ThreadPool;
 
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import java.lang.Object;
-
+import java.util.concurrent.ScheduledExecutorService;
 
 public class UI extends Application implements Observer {
     static private GraphicsContext graphicsContext;
@@ -41,15 +41,12 @@ public class UI extends Application implements Observer {
     static private Image pacmanImage;
     static private Image pacmanLeftImage;
     static private Image blueGhostImage;
-    static private Image greenGhostImage;
     static private Image pickableImage;
     static private Image frightenedGhostImage;
     static private Image ghostImage;
     static private Image bonusPickableImage;
     static private Text scoreText;
     static private Text gameOverText;
-    static private TextFlow textFlow;
-    final private double imageRatio = 0.7;
     final private int textSlotX = 2;
     final private int textSlotY = 12;
     final private int lifeSlotX = 23;
@@ -141,10 +138,6 @@ public class UI extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) {
-        Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
-            System.out.println("Handler caught exception: " + throwable.getMessage());
-        });
-
         Group root = new Group();
 
         TextFlow textFlow = new TextFlow();
@@ -206,7 +199,6 @@ public class UI extends Application implements Observer {
         bonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
         frightenedGhostImage = new Image("file:assets/sprites/frightened-ghost.png");
-        greenGhostImage = new Image("file:assets/sprites/green-ghost.png");
 
         game.load();
 

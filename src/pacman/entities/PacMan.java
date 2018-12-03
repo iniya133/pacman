@@ -34,6 +34,7 @@ public class PacMan extends Entity implements Runnable {
     public void setSuperPacman() {
         superPacman = true;
         stopped = true;
+        timer.cancel();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
