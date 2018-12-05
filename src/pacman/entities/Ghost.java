@@ -56,7 +56,7 @@ public class Ghost extends Entity implements Runnable {
                     switch (currentDirection) {
                         case UP:
                             if (up && right && left) {
-
+                                currentDirection = Direction.UP;
                             } else if (right && left) {
                                 currentDirection = Direction.RIGHT;
                             } else if (right && up) {

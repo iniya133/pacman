@@ -48,7 +48,9 @@ public class UI extends Application implements Observer {
     static private Image bonusPickableImage;
     static private Text scoreText;
     static private Text gameOverText;
-    static private AudioInputStream beginingSound;
+    static private AudioInputStream beginningSound;
+    static private Stage stage;
+    static private Scene gameOverScene;
     final private int textSlotX = 2;
     final private int textSlotY = 12;
     final private int lifeSlotX = 23;
@@ -71,6 +73,16 @@ public class UI extends Application implements Observer {
     }
 
     public void update(Observable observable, Object arg) {
+        if (game.hasLost()) {
+            gameOverText.setFill(Color.RED);
+            gameOverText.setText("You lost ! \n Score " + game.getScore());
+            stage.setScene(gameOverScene);
+        } else if (game.hasWon()) {
+            gameOverText.setFill(Color.GREEN);
+            gameOverText.setText("You won ! \n Score " + game.getScore());
+            stage.setScene(gameOverScene);
+        }
+
         Slot[][] matrix = game.getMatrix();
 
         PacMan pacMan = null;
@@ -111,14 +123,6 @@ public class UI extends Application implements Observer {
             }
         }
 
-        if (game.hasLost()) {
-            gameOverText.setFill(Color.RED);
-            gameOverText.setText("YOU LOSE");
-        } else if (game.hasWon()) {
-            gameOverText.setFill(Color.GREEN);
-            gameOverText.setText("YOU WIN");
-        }
-
         if (pacMan != null && pacMan.getSuperPacman()) {
             ghostImage = frightenedGhostImage;
         } else {
@@ -142,6 +146,7 @@ public class UI extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        stage = primaryStage;
         primaryStage.setTitle("PacMan");
         primaryStage.setResizable(false);
 
@@ -149,19 +154,15 @@ public class UI extends Application implements Observer {
         Group gameRoot = new Group();
         TextFlow textFlow = new TextFlow();
         scoreText = new Text();
-        gameOverText = new Text();
         scoreText.setFont(Font.font("Helvetica", 40));
-        gameOverText.setFont(Font.font("Helvetica", 60));
         scoreText.setFill(Color.WHITE);
-        gameOverText.setFill(Color.RED);
 
         textFlow.getChildren().add(scoreText);
-        textFlow.getChildren().add(gameOverText);
 
         Canvas canvas = new Canvas(windowWidth, windowHeight);
         graphicsContext = canvas.getGraphicsContext2D();
 
-        gameRoot.getChildren().addAll(canvas, textFlow, scoreText, gameOverText);
+        gameRoot.getChildren().addAll(canvas, textFlow, scoreText);
 
         Scene gameScene = new Scene(gameRoot, windowWidth, windowHeight, Color.BLACK);
 
@@ -195,12 +196,26 @@ public class UI extends Application implements Observer {
         menuText.setFill(Color.YELLOW);
         menuText.setFont(Font.font("Helvetica", 40));
         menuText.setText("PACMAN\n\nPress any key to start...");
-        menuText.setTextAlignment(TextAlignment.CENTER);
         menuRoot.getChildren().add(menuText);
+        menuText.setTextAlignment(TextAlignment.CENTER);
         StackPane.setAlignment(menuText, Pos.CENTER);
         Scene menuScene = new Scene(menuRoot, windowWidth, windowHeight, Color.BLACK);
 
-        menuScene.setOnKeyPressed(e -> primaryStage.setScene(gameScene));
+        // GameOver scene
+        StackPane gameOverRoot = new StackPane();
+        gameOverText = new Text();
+        gameOverText.setFill(Color.GREEN);
+        gameOverText.setFont(Font.font("Helvetica", 40));
+        gameOverText.setText("You won");
+        gameOverText.setTextAlignment(TextAlignment.CENTER);
+        gameOverRoot.getChildren().add(gameOverText);
+        StackPane.setAlignment(gameOverText, Pos.CENTER);
+        gameOverScene = new Scene(gameOverRoot, windowWidth, windowHeight, Color.BLACK);
+
+        menuScene.setOnKeyPressed(e -> {
+            game.start();
+            primaryStage.setScene(gameScene);
+        });
 
         primaryStage.setScene(menuScene);
         primaryStage.show();
@@ -213,8 +228,8 @@ public class UI extends Application implements Observer {
         frightenedGhostImage = new Image("file:assets/sprites/frightened-ghost.png");
 
         Clip clip = AudioSystem.getClip();
-        beginingSound = AudioSystem.getAudioInputStream(new File("./assets/sounds/pacman_beginning.wav"));
-        clip.open(beginingSound);
+        beginningSound = AudioSystem.getAudioInputStream(new File("./assets/sounds/pacman_beginning.wav"));
+        clip.open(beginningSound);
         clip.start();
 
         game.load();

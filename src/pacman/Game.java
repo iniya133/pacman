@@ -156,32 +156,34 @@ public class Game extends Observable {
                 line = bufferedReader.readLine();
                 y += 1;
             }
-
-            setChanged();
-            notifyObservers();
-
-            for (Entity entity : entities) {
-                if (entity instanceof Ghost) {
-                    Ghost ghost = (Ghost) entity;
-                    Thread thread = new Thread(ghost);
-                    threads.add(thread);
-                    thread.setDaemon(true);
-                    thread.start();
-                }
-                if (entity instanceof PacMan) {
-                    pacman = (PacMan) entity;
-                    Thread thread = new Thread(pacman);
-                    threads.add(thread);
-                    thread.setDaemon(true);
-                    thread.start();
-                }
-            }
         } catch (Exception ex) {
             System.err.println("Could not correctly process level file.");
             System.err.println(ex.toString());
         }
         System.out.println("Level has been loaded");
         lock.unlock();
+    }
+
+    void start() {
+        for (Entity entity : entities) {
+            if (entity instanceof Ghost) {
+                Ghost ghost = (Ghost) entity;
+                Thread thread = new Thread(ghost);
+                threads.add(thread);
+                thread.setDaemon(true);
+                thread.start();
+            }
+            if (entity instanceof PacMan) {
+                pacman = (PacMan) entity;
+                Thread thread = new Thread(pacman);
+                threads.add(thread);
+                thread.setDaemon(true);
+                thread.start();
+            }
+        }
+
+        setChanged();
+        notifyObservers();
     }
 
     public Slot[][] getMatrix() {
@@ -248,7 +250,7 @@ public class Game extends Observable {
         return new Position(new_x, new_y);
     }
 
-    boolean canMove(Entity entity, Position position) {
+    private boolean canMove(Entity entity, Position position) {
         lock.lock();
 
         int x = position.x;
@@ -276,11 +278,10 @@ public class Game extends Observable {
      *
      * @param entity    {Entity}
      * @param direction {Direction}
-     * @return boolean
      */
-    public boolean move(Entity entity, Direction direction) {
+    public void move(Entity entity, Direction direction) {
         if (!(entity instanceof Ghost) && !(entity instanceof PacMan)) {
-            return false;
+            return;
         }
 
         lock.lock();
@@ -299,8 +300,6 @@ public class Game extends Observable {
         testDeath();
         testEnded();
         lock.unlock();
-
-        return hasMoved;
     }
 
     /**
@@ -367,14 +366,6 @@ public class Game extends Observable {
                     pacman.die();
                     if (pacman.getLifes() > 0) {
                         pacman.setPosition(pacmanRespawnPos);
-                    } else {
-                        for (Entity e : entities) {
-                            if (e instanceof PacMan) {
-                                entities.remove(e);
-                                break;
-                            }
-                        }
-                        pacman = null;
                     }
                 }
 
@@ -407,7 +398,7 @@ public class Game extends Observable {
         return won;
     }
 
-    public boolean hasLost() {
+    boolean hasLost() {
         return lost;
     }
 }
