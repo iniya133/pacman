@@ -115,7 +115,6 @@ public class Game extends Observable {
             matrix = new Slot[width][height];
             entities = new ArrayList<>();
 
-
             int y = 0;
             while (line != null && y < height) {
 
@@ -184,6 +183,13 @@ public class Game extends Observable {
 
         setChanged();
         notifyObservers();
+    }
+
+    void restart() {
+        won = false;
+        lost = false;
+        load();
+        start();
     }
 
     public Slot[][] getMatrix() {

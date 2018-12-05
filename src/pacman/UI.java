@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -75,11 +76,11 @@ public class UI extends Application implements Observer {
     public void update(Observable observable, Object arg) {
         if (game.hasLost()) {
             gameOverText.setFill(Color.RED);
-            gameOverText.setText("You lost ! \n Score " + game.getScore());
+            gameOverText.setText("You lost ! \n Score " + game.getScore() + "\n Press space to restart");
             stage.setScene(gameOverScene);
         } else if (game.hasWon()) {
             gameOverText.setFill(Color.GREEN);
-            gameOverText.setText("You won ! \n Score " + game.getScore());
+            gameOverText.setText("You won ! \n Score " + game.getScore() + "\n Press space to restart");
             stage.setScene(gameOverScene);
         }
 
@@ -195,7 +196,7 @@ public class UI extends Application implements Observer {
         Text menuText = new Text();
         menuText.setFill(Color.YELLOW);
         menuText.setFont(Font.font("Helvetica", 40));
-        menuText.setText("PACMAN\n\nPress any key to start...");
+        menuText.setText("PACMAN\n\nPress space to start...");
         menuRoot.getChildren().add(menuText);
         menuText.setTextAlignment(TextAlignment.CENTER);
         StackPane.setAlignment(menuText, Pos.CENTER);
@@ -212,9 +213,18 @@ public class UI extends Application implements Observer {
         StackPane.setAlignment(gameOverText, Pos.CENTER);
         gameOverScene = new Scene(gameOverRoot, windowWidth, windowHeight, Color.BLACK);
 
+        gameOverScene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.SPACE) {
+                game.restart();
+                primaryStage.setScene(gameScene);
+            }
+        });
+
         menuScene.setOnKeyPressed(e -> {
-            game.start();
-            primaryStage.setScene(gameScene);
+            if (e.getCode() == KeyCode.SPACE) {
+                game.start();
+                primaryStage.setScene(gameScene);
+            }
         });
 
         primaryStage.setScene(menuScene);
