@@ -27,6 +27,7 @@ import javafx.scene.text.Text;
 
 import javax.sound.sampled.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -140,10 +141,11 @@ public class UI extends Application implements Observer {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         primaryStage.setTitle("PacMan");
         primaryStage.setResizable(false);
 
+        // Game scene
         Group gameRoot = new Group();
         TextFlow textFlow = new TextFlow();
         scoreText = new Text();
@@ -162,16 +164,6 @@ public class UI extends Application implements Observer {
         gameRoot.getChildren().addAll(canvas, textFlow, scoreText, gameOverText);
 
         Scene gameScene = new Scene(gameRoot, windowWidth, windowHeight, Color.BLACK);
-
-        StackPane menuRoot = new StackPane();
-        Text menuText = new Text();
-        menuText.setFill(Color.YELLOW);
-        menuText.setFont(Font.font("Helvetica", 40));
-        menuText.setText("PACMAN\n\nPress any key to start...");
-        menuText.setTextAlignment(TextAlignment.CENTER);
-        menuRoot.getChildren().add(menuText);
-        StackPane.setAlignment(menuText, Pos.CENTER);
-        Scene menuScene = new Scene(menuRoot, windowWidth, windowHeight, Color.BLACK);
 
         gameScene.setOnKeyPressed(e -> {
             PacMan pacMan = game.getPacman();
@@ -197,6 +189,17 @@ public class UI extends Application implements Observer {
             }
         });
 
+        // Menu scene
+        StackPane menuRoot = new StackPane();
+        Text menuText = new Text();
+        menuText.setFill(Color.YELLOW);
+        menuText.setFont(Font.font("Helvetica", 40));
+        menuText.setText("PACMAN\n\nPress any key to start...");
+        menuText.setTextAlignment(TextAlignment.CENTER);
+        menuRoot.getChildren().add(menuText);
+        StackPane.setAlignment(menuText, Pos.CENTER);
+        Scene menuScene = new Scene(menuRoot, windowWidth, windowHeight, Color.BLACK);
+
         menuScene.setOnKeyPressed(e -> primaryStage.setScene(gameScene));
 
         primaryStage.setScene(menuScene);
@@ -208,14 +211,11 @@ public class UI extends Application implements Observer {
         bonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
         frightenedGhostImage = new Image("file:assets/sprites/frightened-ghost.png");
-        try {
-            Clip clip = AudioSystem.getClip();
-            beginingSound = AudioSystem.getAudioInputStream(new File("./assets/sounds/pacman_beginning.wav"));
-            clip.open(beginingSound);
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        Clip clip = AudioSystem.getClip();
+        beginingSound = AudioSystem.getAudioInputStream(new File("./assets/sounds/pacman_beginning.wav"));
+        clip.open(beginingSound);
+        clip.start();
 
         game.load();
     }
