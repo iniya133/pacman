@@ -1,8 +1,6 @@
 package pacman;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -13,7 +11,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
-import javafx.stage.WindowEvent;
 import pacman.entities.BonusPickable;
 import pacman.slots.Corridor;
 import pacman.slots.GhostDoor;
@@ -24,14 +21,14 @@ import pacman.entities.Ghost;
 import pacman.entities.Pickable;
 
 import javafx.scene.text.Text;
-import sun.nio.ch.ThreadPool;
 
+import javax.sound.sampled.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 import java.lang.Object;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class UI extends Application implements Observer {
     static private GraphicsContext graphicsContext;
@@ -47,10 +44,13 @@ public class UI extends Application implements Observer {
     static private Image bonusPickableImage;
     static private Text scoreText;
     static private Text gameOverText;
+    static private AudioInputStream beginingSound;
     final private int textSlotX = 2;
     final private int textSlotY = 12;
     final private int lifeSlotX = 23;
     final private int lifeSlotY = 12;
+
+//    static Media
 
     private void drawImage(Image image, int slotSize, int paddingLeft, int paddingTop, int x, int y, boolean enableRatio) {
         double imageRatio = 0.7;
@@ -199,6 +199,14 @@ public class UI extends Application implements Observer {
         bonusPickableImage = new Image("file:assets/sprites/mega-pickable.png");
         blueGhostImage = new Image("file:assets/sprites/blue-ghost.png");
         frightenedGhostImage = new Image("file:assets/sprites/frightened-ghost.png");
+        try {
+            Clip clip = AudioSystem.getClip();
+            beginingSound = AudioSystem.getAudioInputStream(new File("./assets/sounds/pacman_beginning.wav"));
+            clip.open(beginingSound);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         game.load();
 

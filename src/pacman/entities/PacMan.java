@@ -15,7 +15,7 @@ public class PacMan extends Entity implements Runnable {
     private int lifes = 3;
     private final int SUPER_PACMAN_TIMEOUT = 10; // seconds
     private final int STOPPED_TIMEOUT = 1; // seconds
-    private Timer timer = new Timer();
+    private Timer timer;
     private Game game;
     private boolean stopped;
 
@@ -34,7 +34,12 @@ public class PacMan extends Entity implements Runnable {
     public void setSuperPacman() {
         superPacman = true;
         stopped = true;
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+            timer = null;
+        }
+        timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
