@@ -7,7 +7,7 @@ public abstract class Entity {
         return position;
     }
 
-    public void setPosition(int x, int y) {
+    void setPosition(int x, int y) {
         this.position = new Position(x, y);
     }
 

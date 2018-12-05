@@ -213,10 +213,6 @@ public class Game extends Observable {
         return entitiesClone;
     }
 
-    public boolean isEnded() {
-        return false;
-    }
-
     private Position getPositionWithDirection(Entity entity, Direction direction) {
         Position position = entity.getPosition();
         int new_x = position.x;
@@ -400,14 +396,14 @@ public class Game extends Observable {
         }
     }
 
-    public void cleanThreads() {
+    private void cleanThreads() {
         for (Thread thread : threads) {
             thread.interrupt();
         }
         threads.clear();
     }
 
-    public boolean hasWon() {
+    boolean hasWon() {
         return won;
     }
 
