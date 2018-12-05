@@ -1,13 +1,16 @@
 package pacman;
 
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
@@ -138,8 +141,10 @@ public class UI extends Application implements Observer {
 
     @Override
     public void start(Stage primaryStage) {
-        Group root = new Group();
+        primaryStage.setTitle("PacMan");
+        primaryStage.setResizable(false);
 
+        Group gameRoot = new Group();
         TextFlow textFlow = new TextFlow();
         scoreText = new Text();
         gameOverText = new Text();
@@ -154,19 +159,21 @@ public class UI extends Application implements Observer {
         Canvas canvas = new Canvas(windowWidth, windowHeight);
         graphicsContext = canvas.getGraphicsContext2D();
 
-        root.getChildren().add(canvas);
-        root.getChildren().add(textFlow);
+        gameRoot.getChildren().addAll(canvas, textFlow, scoreText, gameOverText);
 
-        primaryStage.setTitle("PacMan");
-        primaryStage.setResizable(false);
-        Scene scene = new Scene(root, Color.BLACK);
+        Scene gameScene = new Scene(gameRoot, windowWidth, windowHeight, Color.BLACK);
 
+        StackPane menuRoot = new StackPane();
+        Text menuText = new Text();
+        menuText.setFill(Color.YELLOW);
+        menuText.setFont(Font.font("Helvetica", 40));
+        menuText.setText("PACMAN\n\nPress any key to start...");
+        menuText.setTextAlignment(TextAlignment.CENTER);
+        menuRoot.getChildren().add(menuText);
+        StackPane.setAlignment(menuText, Pos.CENTER);
+        Scene menuScene = new Scene(menuRoot, windowWidth, windowHeight, Color.BLACK);
 
-        root.getChildren().add(scoreText);
-        root.getChildren().add(gameOverText);
-
-
-        scene.setOnKeyPressed(e -> {
+        gameScene.setOnKeyPressed(e -> {
             PacMan pacMan = game.getPacman();
             if (pacMan != null) {
                 switch (e.getCode()) {
@@ -190,7 +197,9 @@ public class UI extends Application implements Observer {
             }
         });
 
-        primaryStage.setScene(scene);
+        menuScene.setOnKeyPressed(e -> primaryStage.setScene(gameScene));
+
+        primaryStage.setScene(menuScene);
         primaryStage.show();
 
         pacmanImage = new Image("file:assets/sprites/pacman.png");
@@ -209,7 +218,6 @@ public class UI extends Application implements Observer {
         }
 
         game.load();
-
     }
 
     void bootstrap(Game g) {
