@@ -12,6 +12,5 @@ public class Main {
 
         game.addObserver(ui);
         ui.bootstrap(game);
-        System.exit(0);
     }
 }
