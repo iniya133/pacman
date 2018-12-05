@@ -52,8 +52,8 @@ public class UI extends Application implements Observer {
     static private AudioInputStream beginningSound;
     static private Stage stage;
     static private Scene gameOverScene;
-    final private int textSlotX = 2;
-    final private int textSlotY = 12;
+    final private int textSlotX = 1;
+    final private int textSlotY = 11;
     final private int lifeSlotX = 23;
     final private int lifeSlotY = 12;
 
@@ -77,10 +77,6 @@ public class UI extends Application implements Observer {
         if (game.hasLost()) {
             gameOverText.setFill(Color.RED);
             gameOverText.setText("You lost ! \n Score " + game.getScore() + "\n Press space to restart");
-            stage.setScene(gameOverScene);
-        } else if (game.hasWon()) {
-            gameOverText.setFill(Color.GREEN);
-            gameOverText.setText("You won ! \n Score " + game.getScore() + "\n Press space to restart");
             stage.setScene(gameOverScene);
         }
 
@@ -130,10 +126,7 @@ public class UI extends Application implements Observer {
             ghostImage = blueGhostImage;
         }
 
-        gameOverText.setX(slotSize * (game.getWidth() / 2.0 - 5) + paddingLeft);
-        gameOverText.setY(slotSize * game.getWidth() / 2.0 + paddingTop);
-
-        scoreText.setText(String.valueOf(game.getScore()));
+        scoreText.setText("Score : " + game.getScore() + "\n Level : " + game.getLevel());
         scoreText.setX(slotSize * textSlotX + paddingTop);
         scoreText.setY(slotSize * textSlotY + paddingTop);
 
@@ -142,7 +135,6 @@ public class UI extends Application implements Observer {
                 drawImage(pacmanImage, slotSize, paddingLeft, paddingTop, lifeSlotX + i, lifeSlotY, true);
             }
         }
-
     }
 
     @Override
@@ -155,7 +147,7 @@ public class UI extends Application implements Observer {
         Group gameRoot = new Group();
         TextFlow textFlow = new TextFlow();
         scoreText = new Text();
-        scoreText.setFont(Font.font("Helvetica", 40));
+        scoreText.setFont(Font.font("Helvetica", 20));
         scoreText.setFill(Color.WHITE);
 
         textFlow.getChildren().add(scoreText);

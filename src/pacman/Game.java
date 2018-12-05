@@ -20,6 +20,7 @@ public class Game extends Observable {
     private Slot[][] matrix;
     private ArrayList<Entity> entities;
     private int score = 0;
+    private int level = 1;
     private int pickableLeft = 0;
     private int width;
     private int height;
@@ -93,6 +94,10 @@ public class Game extends Observable {
 
     int getScore() {
         return score;
+    }
+
+    int getLevel() {
+        return level;
     }
 
     public PacMan getPacman() {
@@ -389,7 +394,9 @@ public class Game extends Observable {
             cleanThreads();
         } else if (pickableLeft == 0) {
             won = true;
+            level += 1;
             cleanThreads();
+            restart();
         }
     }
 
