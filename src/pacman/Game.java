@@ -305,11 +305,12 @@ public class Game extends Observable {
         }
 
         if (hasMoved) {
+            testDeath();
+            testEnded();
             setChanged();
             notifyObservers();
         }
-        testDeath();
-        testEnded();
+
         lock.unlock();
     }
 
@@ -379,9 +380,6 @@ public class Game extends Observable {
                         pacman.setPosition(pacmanRespawnPos);
                     }
                 }
-
-                setChanged();
-                notifyObservers();
                 break;
             }
         }

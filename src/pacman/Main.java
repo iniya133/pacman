@@ -3,6 +3,7 @@ package pacman;
 public class Main {
     public static void main(String[] args) {
         Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) -> {
+            throwable.printStackTrace();
             System.out.println("Handler caught exception: " + throwable.getMessage());
             System.exit(1);
         });
